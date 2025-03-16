@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>跨境电商AI优化助手 - 原型</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        .platform-card {
+            transition: all 0.2s;
+        }
+        
+        .platform-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-item {
+            transition: all 0.2s;
+        }
+        
+        .nav-item:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        .nav-item.active {
+            background-color: rgba(0, 0, 0, 0.1);
+            font-weight: 500;
+        }
+        
+        .image-preview {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        
+        .image-actions {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .image-preview:hover .image-actions {
+            opacity: 1;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .pricing-card {
+            transition: all 0.3s;
+        }
+        
+        .pricing-card:hover {
+            transform: scale(1.03);
+        }
+        
+        .pricing-card.popular {
+            transform: scale(1.05);
+            border-color: #3b82f6;
+        }
+        
+        .pricing-card.popular:hover {
+            transform: scale(1.08);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 导航栏 -->
+    <nav class="bg-white shadow-sm fixed w-full z-10">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <div class="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
+                            <i class="fas fa-rocket text-white text-xl"></i>
+                        </div>
+                        <span class="ml-3 text-xl font-semibold">AI优化助手</span>
+                    </div>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-4">
+                    <button onclick="showPage('dashboard')" class="px-3 py-2 rounded-md text-gray-700 hover:text-black">
+                        <i class="fas fa-home mr-1"></i> 首页
+                    </button>
+                    <button onclick="showPage('history')" class="px-3 py-2 rounded-md text-gray-700 hover:text-black">
+                        <i class="fas fa-history mr-1"></i> 历史记录
+                    </button>
+                    <button onclick="showPage('pricing')" class="px-3 py-2 rounded-md text-gray-700 hover:text-black">
+                        <i class="fas fa-crown mr-1"></i> 会员升级
+                    </button>
+                    <div class="relative">
+                        <button class="flex items-center px-3 py-2 rounded-md text-gray-700 hover:text-black">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" 
+                                 alt="用户头像" class="w-8 h-8 rounded-full mr-2">
+                            <span>张先生</span>
+                            <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="md:hidden">
+                    <button class="text-gray-700">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 登录页面 -->
+    <div id="login" class="page min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-md">
+            <div>
+                <div class="w-16 h-16 bg-black rounded-xl flex items-center justify-center mx-auto">
+                    <i class="fas fa-rocket text-white text-2xl"></i>
+                </div>
+                <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                    欢迎使用
+                </h2>
+                <p class="mt-2 text-center text-sm text-gray-600">
+                    跨境电商AI优化助手
+                </p>
+            </div>
+            
+            <div class="mt-8 space-y-4">
+                <button class="group relative w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700 focus:outline-none">
+                    <i class="fab fa-weixin text-xl mr-3"></i>
+                    <span>使用微信登录</span>
+                </button>
+                
+                <button class="group relative w-full flex justify-center py-3 px-4 border border-gray-300 rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" class="w-5 h-5 mr-3">
+                    <span>使用Google登录</span>
+                </button>
+                
+                <div class="relative">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-300"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-2 bg-white text-gray-500">
+                            或使用邮箱登录
+                        </span>
+                    </div>
+                </div>
+                
+                <div>
+                    <input type="email" required class="appearance-none rounded-md relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-black focus:border-black focus:z-10 sm:text-sm" placeholder="邮箱地址">
+                </div>
+                
+                <div>
+                    <input type="password" required class="appearance-none rounded-md relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-black focus:border-black focus:z-10 sm:text-sm" placeholder="密码">
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-black focus:ring-black border-gray-300 rounded">
+                        <label for="remember-me" class="ml-2 block text-sm text-gray-900">
+                            记住我
+                        </label>
+                    </div>
+                    
+                    <div class="text-sm">
+                        <a href="#" class="font-medium text-gray-600 hover:text-black">
+                            忘记密码?
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <button onclick="showPage('dashboard')" class="group relative w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-white bg-black hover:bg-gray-800 focus:outline-none">
+                        登录
+                    </button>
+                </div>
+            </div>
+            
+            <div class="text-center text-sm text-gray-600">
+                还没有账号? <a href="#" class="font-medium text-black hover:underline">立即注册</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 仪表盘页面 -->
+    <div id="dashboard" class="page pt-20 pb-12">
+        <div class="container mx-auto px-4">
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-900">欢迎回来，张先生</h1>
+                <p class="text-gray-600 mt-2">今天是 2023年10月15日，您本月还有 45 次AI优化次数</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-magic text-blue-600"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-gray-900">AI优化</h3>
+                            <p class="text-gray-600">本月已使用: 55次</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-image text-purple-600"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-gray-900">图片编辑</h3>
+                            <p class="text-gray-600">本月已使用: 23次</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-chart-line text-green-600"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-gray-900">价格分析</h3>
+                            <p class="text-gray-600">本月已使用: 12次</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">选择平台</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="platform-card bg-white rounded-xl shadow-sm p-6 cursor-pointer" onclick="showPage('tiktok-optimize')">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-black rounded-lg flex items-center justify-center">
+                                <i class="fab fa-tiktok text-white text-xl"></i>
+                            </div>
+                            <h3 class="ml-3 text-lg font-semibold">TikTok Shop</h3>
+                        </div>
+                        <p class="text-gray-600 text-sm">针对TikTok Shop平台优化产品信息，提高曝光和转化</p>
+                    </div>
+                    
+                    <div class="platform-card bg-white rounded-xl shadow-sm p-6 cursor-pointer">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-orange-500 rounded-lg flex items-center justify-center">
+                                <i class="fab fa-amazon text-white text-xl"></i>
+                            </div>
+                            <h3 class="ml-3 text-lg font-semibold">Amazon</h3>
+                        </div>
+                        <p class="text-gray-600 text-sm">针对Amazon平台优化产品信息，提高搜索排名和点击率</p>
+                    </div>
+                    
+                    <div class="platform-card bg-white rounded-xl shadow-sm p-6 cursor-pointer">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-red-500 rounded-lg flex items-center justify-center">
+                                <i class="fab fa-ebay text-white text-xl"></i>
+                            </div>
+                            <h3 class="ml-3 text-lg font-semibold">eBay</h3>
+                        </div>
+                        <p class="text-gray-600 text-sm">针对eBay平台优化产品信息，提高曝光和销量</p>
+                    </div>
+                    
+                    <div class="platform-card bg-white rounded-xl shadow-sm p-6 cursor-pointer">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-shopping-bag text-white text-xl"></i>
+                            </div>
+                            <h3 class="ml-3 text-lg font-semibold">Shopee</h3>
+                        </div>
+                        <p class="text-gray-600 text-sm">针对Shopee平台优化产品信息，提高搜索排名和转化率</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">最近优化</h2>
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    产品
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    平台
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    优化类型
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    日期
+                                </th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    操作
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10">
+                                            <img class="h-10 w-10 rounded-md object-cover" src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&h=400&q=80" alt="产品图片">
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">
+                                                智能手表
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <i class="fab fa-tiktok mr-2"></i>
+                                        <span class="text-sm text-gray-900">TikTok Shop</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                        标题优化
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    2023-10-14
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <a href="#" class="text-blue-600 hover:text-blue-900 mr-3">查看</a>
+                                    <a href="#" class="text-gray-600 hover:text-gray-900">复制</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10">
+                                            <img class="h-10 w-10 rounded-md object-cover" src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&h=400&q=80" alt="产品图片">
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">
+                                                便携相机
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <i class="fab fa-amazon mr-2"></i>
+                                        <span class="text-sm text-gray-900">Amazon</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                                        图片优化
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    2023-10-12
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <a href="#" class="text-blue-600 hover:text-blue-900 mr-3">查看</a>
+                                    <a href="#" class="text-gray-600 hover:text-gray-900">复制</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-10 w-10">
+                                            <img class="h-10 w-10 rounded-md object-cover" src="https://images.unsplash.com/photo-1585155770447-2f66e2a397b5?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&h=400&q=80" alt="产品图片">
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">
+                                                无线耳机
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-shopping-bag mr-2"></i>
+                                        <span class="text-sm text-gray-900">Shopee</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                        价格分析
+                                    </span>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    2023-10-10
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                    <a href="#" class="text-blue-600 hover:text-blue-900 mr-3">查看</a>
+                                    <a href="#" class="text-gray-600 hover:text-gray-900">复制</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">使用统计</h2>
+                <div class="bg-white rounded-xl shadow-sm p-6">
+                    <div class="mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">本月优化次数</h3>
+                        <canvas id="usageChart" height="100"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TikTok优化页面 -->
+    <div id="tiktok-optimize" class="page pt-20 pb-12">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center mb-6">
+                <button onclick="showPage('dashboard')" class="mr-4 text-gray-600 hover:text-black">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h1 class="text-2xl font-bold text-gray-900">TikTok Shop 产品优化</h1>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                        <h2 class="text-xl font-semibold text-gray-900 mb-4">产品信息</h2>
+                        
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                原有标题
+                            </label>
+                            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-black focus:border-black" 
+                                   placeholder="输入您的原始产品标题" value="智能手表 防水运动手环 心率监测 多功能计步器">
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    目标语言
+                                </label>
+                                <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-black focus:border-black">
+                                    <option>英语 (美国)</option>
+                                    <option>英语 (英国)</option>
+                                    <option>泰语</option>
+                                    <option>越南语</option>
+                                    <option>印尼语</option>
+                                    <option>马来语</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    产品类别
+                                </label>
+                                <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-black focus:border-black">
+                                    <option>电子产品</option>
+                                    <option>服装鞋帽</option>
+                                    <option>家居用品</option>
+                                    <option>美妆个护</option>
+                                    <option>母婴用品</option>
+                                    <option>其他</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    产品长度 (cm)
+                                </label>
+                                <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-black focus:border-black" 
+                                       placeholder="长度" value="5.2">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    产品宽度 (cm)
+                                </label>
+                                <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-black focus:border-black" 
+                                       placeholder="宽度" value="3.8">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    产品高度 (cm)
+                                </label>
+                                <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-black focus:border-black" placeholder="高度" value="1.2">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                产品卖点 (每行一个)
+                            </label>
+                            <textarea class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-black focus:border-black" 
+                                      rows="4" placeholder="输入产品主要卖点，每行一个">IP68级防水
+心率血氧监测
+14天超长续航
+多种运动模式
+支持来电提醒和消息通知</textarea>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    进货成本 (元)
+                                </label>
+                                <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-black focus:border-black" 
+                                       placeholder="成本" value="45">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    物流成本 (元)
+                                </label>
+                                <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-black focus:border-black" 
+                                       placeholder="物流成本" value="15">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    期望利润率 (%)
+                                </label>
+                                <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-black focus:border-black" 
+                                       placeholder="利润率" value="40">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                平台佣金费率 (%)
+                            </label>
+                            <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-black focus:border-black" 
+                                   placeholder="佣金费率" value="5">
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <h2 class="text-xl font-semibold text-gray-900 mb-4">产品图片</h2>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+                            <div class="image-preview">
+                                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&h=400&q=80" 
+                                     alt="产品图片" class="w-full h-40 object-cover rounded-md">
+                                <div class="image-actions flex justify-between">
+                                    <button class="text-white text-sm"><i class="fas fa-edit mr-1"></i> 编辑</button>
+                                    <button class="text-white text-sm"><i class="fas fa-trash mr-1"></i> 删除</button>
+                                </div>
+                            </div>
+                            
+                            <div class="image-preview">
+                                <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&h=400&q=80" 
+                                     alt="产品图片" class="w-full h-40 object-cover rounded-md">
+                                <div class="image-actions flex justify-between">
+                                    <button class="text-white text-sm"><i class="fas fa-edit mr-1"></i> 编辑</button>
+                                    <button class="text-white text-sm"><i class="fas fa-trash mr-1"></i> 删除</button>
+                                </div>
+                            </div>
+                            
+                            <div class="border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center h-40 cursor-pointer hover:bg-gray-50">
+                                <div class="text-center">
+                                    <i class="fas fa-plus text-gray-400 text-xl mb-2"></i>
+                                    <p class="text-sm text-gray-500">添加图片</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="text-sm text-gray-500">支持JPG、PNG格式，最多上传9张图片</span>
+                            </div>
+                            <div>
+                                <button class="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700">
+                                    <i class="fas fa-magic mr-1"></i> AI图片优化
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-xl shadow-sm p-6 mb-6 sticky top-24">
+                        <h2 class="text-xl font-semibold text-gray-900 mb-4">优化选项</h2>
+                        
+                        <div class="mb-4">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded text-black focus:ring-black h-4 w-4" checked>
+                                <span class="ml-2 text-gray-700">标题优化</span>
+                            </label>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded text-black focus:ring-black h-4 w-4" checked>
+                                <span class="ml-2 text-gray-700">产品描述生成</span>
+                            </label>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded text-black focus:ring-black h-4 w-4" checked>
+                                <span class="ml-2 text-gray-700">价格建议</span>
+                            </label>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded text-black focus:ring-black h-4 w-4">
+                                <span class="ml-2 text-gray-700">关键词建议</span>
+                            </label>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded text-black focus:ring-black h-4 w-4">
+                                <span class="ml-2 text-gray-700">图片优化建议</span>
+                            </label>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                优化风格
+                            </label>
+                            <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-black focus:border-black">
+                                <option>标准优化</option>
+                                <option>吸引年轻用户</option>
+                                <option>突出性价比</option>
+                                <option>强调高端品质</option>
+                                <option>促销导向</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                生成版本数量
+                            </label>
+                            <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-black focus:border-black">
+                                <option>1个版本</option>
+                                <option selected>3个版本</option>
+                                <option>5个版本</option>
+                            </select>
+                        </div>
+                        
+                        <button onclick="showPage('tiktok-result')" class="w-full py-3 bg-black text-white rounded-md hover:bg-gray-800 flex items-center justify-center">
+                            <i class="fas fa-bolt mr-2"></i> 开始优化
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TikTok优化结果页面 -->
+    <div id="tiktok-result" class="page pt-20 pb-12">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center mb-6">
+                <button onclick="showPage('tiktok-optimize')" class="mr-4 text-gray-600 hover:text-black">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h1 class="text-2xl font-bold text-gray-900">优化结果</h1>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-black rounded-lg flex items-center justify-center">
+                            <i class="fab fa-tiktok text-white text-xl"></i>
+                        </div>
+                        <div class="ml-3">
+                            <h2 class="text-xl font-semibold text-gray-900">TikTok Shop 优化结果</h2>
+                            <p class="text-gray-500 text-sm">生成时间: 2023-10-15 15:30</p>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 mr-2">
+                            <i class="far fa-save mr-1"></i> 保存
+                        </button>
+                        <button class="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800">
+                            <i class="far fa-copy mr-1"></i> 复制全部
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mb-8">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">标题优化</h3>
+                        <button class="text-blue-600 hover:text-blue-800 text-sm">
+                            <i class="far fa-copy mr-1"></i> 复制
+                        </button>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                        <div class="flex items-start">
+                            <div class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">
+                                1
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-gray-900 font-medium">IP68 Waterproof Smart Watch | Heart Rate Monitor | 14-Day Battery | Fitness Tracker</p>
+                                <p class="text-gray-500 text-sm mt-1">优化理由: 突出防水等级、心率监测和长续航三大核心卖点，使用竖线分隔关键特性，便于快速浏览。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg mb-4">
+                        <div class="flex items-start">
+                            <div class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">
+                                2
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-gray-900 font-medium">2023 Fitness Smart Watch with Blood Oxygen & Heart Rate Monitor - 14 Day Battery Life - Waterproof</p>
+                                <p class="text-gray-500 text-sm mt-1">优化理由: 添加年份增加新鲜感，强调血氧和心率监测功能，使用破折号分隔特性，突出长续航和防水。</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <div class="flex items-start">
+                            <div class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-1">
+                                3
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-gray-900 font-medium">Waterproof Smart Watch for Sports & Fitness - Heart Rate & SpO2 Monitor - 14-Day Battery Life</p>
+                                <p class="text-gray-500 text-sm mt-1">优化理由: 明确目标用户(运动和健身爱好者)，专业化表述(SpO2)，强调长续航作为差异化卖点。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-8">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">产品描述</h3>
+                        <button class="text-blue-600 hover:text-blue-800 text-sm">
+                            <i class="far fa-copy mr-1"></i> 复制
+                        </button>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-medium text-gray-900 mb-2">IP68 Waterproof Smart Watch - Your Ultimate Fitness Companion</h4>
+                        
+                        <p class="text-gray-700 mb-3">Track your health and fitness with our advanced smart watch, designed to keep up with your active lifestyle. With IP68 waterproof rating, you can wear it while swimming or in the shower without worry.</p>
+                        
+                        <h5 class="font-medium text-gray-900 mb-1">Key Features:</h5>
+                        <ul class="list-disc list-inside mb-3 text-gray-700">
+                            <li><strong>Real-time Health Monitoring:</strong> Track heart rate, blood oxygen levels, sleep patterns, and stress levels 24/7</li>
+                            <li><strong>14-Day Battery Life:</strong> Enjoy up to two weeks of use on a single charge</li>
+                            <li><strong>Multiple Sport Modes:</strong> Track running, cycling, swimming, and more with dedicated sport modes</li>
+                            <li><strong>Smart Notifications:</strong> Receive call, text, and app notifications directly on your wrist</li>
+                            <li><strong>IP68 Waterproof:</strong> Fully waterproof design for swimming and everyday use</li>
+                        </ul>
+                        
+                        <h5 class="font-medium text-gray-900 mb-1">Package Includes:</h5>
+                        <ul class="list-disc list-inside mb-3 text-gray-700">
+                            <li>1 x Smart Watch</li>
+                            <li>1 x Magnetic Charging Cable</li>
+                            <li>1 x User Manual</li>
+                        </ul>
+                        
+                        <p class="text-gray-700">Compatible with iOS 9.0+ and Android 5.0+ devices. Download our free app to access all features and customize your experience.</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-900">价格建议</h3>
+                        <button class="text-blue-600 hover:text-blue-800 text-sm">
+                            <i class="far fa-copy mr-1"></i> 复制
+                        </button>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h4 class="font-medium text-gray-900 mb-2">成本分析</h4>
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">进货成本:</span>
+                                    <span class="font-medium">¥45.00</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">物流成本:</span>
+                                    <span class="font-medium">¥15.00</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">平台佣金 (5%):</span>
+                                    <span class="font-medium">¥5.00</span>
+                                </div>
+                                <div class="flex justify-between border-t pt-2 mt-2">
+                                    <span class="text-gray-600">总成本:</span>
+                                    <span class="font-medium">¥65.00</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h4 class="font-medium text-gray-900 mb-2">建议定价</h4>
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">参考价格:</span>
+                                    <span class="font-medium">¥129.00</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">促销价格:</span>
+                                    <span class="font-medium text-red-600">¥99.00</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">利润率:</span>
+                                    <span class="font-medium text-green-600">34.3%</span>
+                                </div>
+                                <div class="flex justify-between border-t pt-2 mt-2">
+                                    <span class="text-gray-600">预计利润:</span>
+                                    <span class="font-medium text-green-600">¥34.00</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-4 rounded-lg">
+                            <h4 class="font-medium text-gray-900 mb-2">市场分析</h4>
+                            <div class="space-y-2">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">市场均价:</span>
+                                    <span class="font-medium">¥120.00</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">最低价格:</span>
+                                    <span class="font-medium">¥79.00</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">最高价格:</span>
+                                    <span class="font-medium">¥199.00</span>
+                                </div>
+                                <div class="flex justify-between border-t pt-2 mt-2">
+                                    <span class="text-gray-600">价格定位:</span>
+                                    <span class="font-medium">中等偏下</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex justify-between">
+                <button onclick="showPage('tiktok-optimize')" class="px-6 py-3 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">
+                    <i class="fas fa-arrow-left mr-2"></i> 返回编辑
+                </button>
+                
+                <div>
+                    <button class="px-6 py-3 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 mr-3">
+                        <i class="fas fa-redo mr-2"></i> 重新生成
+                    </button>
+                    
+                    <button class="px-6 py-3 bg-black text-white rounded-md hover:bg-gray-800">
+                        <i class="fas fa-check mr-2"></i> 完成并保存
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 历史记录页面 -->
+    <div id="history" class="page pt-20 pb-12">
+        <div class="container mx-auto px-4">
+            <h1 class="text-3xl font-bold text-gray-900 mb-6">历史记录</h1>
+            
+            <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-8">
+                <div class="p-4 border-b">
+                    <div class="flex flex-wrap items-center justify-between">
+                        <div class="flex items-center space-x-4 mb-2 sm:mb-0">
+                            <div>
+                                <label class="text-sm text-gray-600">平台:</label>
+                                <select class="ml-2 border border-gray-300 rounded-md text-sm px-2 py-1">
+                                    <option>全部平台</option>
+                                    <option>TikTok Shop</option>
+                                    <option>Amazon</option>
+                                    <option>eBay</option>
+                                    <option>Shopee</option>
+                                </select>
+                            </div>
+                            
+                            <div>
+                                <label class="text-sm text-gray-600">类型:</label>
+                                <select class="ml-2 border border-gray-300 rounded-md text-sm px-2 py-1">
+                                    <option>全部类型</option>
+                                    <option>标题优化</option>
+                                    <option>描述生成</option>
+                                    <option>图片优化</option>
+                                    <option>价格分析</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="w-full sm:w-auto mt-2 sm:mt-0">
+                            <input type="text" placeholder="搜索产品名称" class="border border-gray-300 rounded-md px-3 py-1 w-full sm:w-auto">
+                        </div>
+                    </div>
+                </div>
+                
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                产品
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                平台
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                优化类型
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                日期
+                            </th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                操作
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10">
+                                        <img class="h-10 w-10 rounded-md object-cover" src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&h=400&q=80" alt="产品图片">
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">
+                                            智能手表
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fab fa-tiktok mr-2"></i>
+                                    <span class="text-sm text-gray-900">TikTok Shop</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                    标题优化
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                2023-10-15
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <a href="#" class="text-blue-600 hover:text-blue-900 mr-3">查看</a>
+                                <a href="#" class="text-gray-600 hover:text-gray-900 mr-3">复制</a>
+                                <a href="#" class="text-red-600 hover:text-red-900">删除</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10">
+                                        <img class="h-10 w-10 rounded-md object-cover" src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&h=400&q=80" alt="产品图片">
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">
+                                            便携相机
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fab fa-amazon mr-2"></i>
+                                    <span class="text-sm text-gray-900">Amazon</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                                    图片优化
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                2023-10-12
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <a href="#" class="text-blue-600 hover:text-blue-900 mr-3">查看</a>
+                                <a href="#" class="text-gray-600 hover:text-gray-900 mr-3">复制</a>
+                                <a href="#" class="text-red-600 hover:text-red-900">删除</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10">
+                                    <div class="flex-shrink-0 h-10 w-10">
+                                        <img class="h-10 w-10 rounded-md object-cover" src="https://images.unsplash.com/photo-1585155770447-2f66e2a397b5?ixlib=rb-1.2.1&auto=format&fit=crop&w=400&h=400&q=80" alt="产品图片">
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900">
+                                            无线耳机
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fas fa-shopping-bag mr-2"></i>
+                                    <span class="text-sm text-gray-900">Shopee</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                                    价格分析
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                2023-10-10
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <a href="#" class="text-blue-600 hover:text-blue-900 mr-3">查看</a>
+                                <a href="#" class="text-gray-600 hover:text-gray-900 mr-3">复制</a>
+                                <a href="#" class="text-red-600 hover:text-red-900">删除</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="px-6 py-4 border-t">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-700">
+                                显示 <span class="font-medium">1</span> 到 <span class="font-medium">3</span> 条，共 <span class="font-medium">12</span> 条记录
+                            </p>
+                        </div>
+                        <div>
+                            <nav class="flex items-center">
+                                <button class="px-2 py-1 rounded-md border border-gray-300 text-gray-500 hover:bg-gray-50 mr-2">
+                                    上一页
+                                </button>
+                                <button class="px-3 py-1 rounded-md bg-black text-white mr-1">1</button>
+                                <button class="px-3 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 mr-1">2</button>
+                                <button class="px-3 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 mr-1">3</button>
+                                <button class="px-3 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 mr-1">4</button>
+                                <button class="px-2 py-1 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50 ml-1">
+                                    下一页
+                                </button>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 会员价格页面 -->
+    <div id="pricing" class="page pt-20 pb-12">
+        <div class="container mx-auto px-4">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2 text-center">会员套餐</h1>
+            <p class="text-gray-600 text-center mb-12">选择适合您业务需求的会员套餐，提升您的跨境电商效率</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <div class="pricing-card bg-white rounded-xl shadow-sm p-6 border-2 border-transparent">
+                    <div class="text-center mb-6">
+                        <h2 class="text-xl font-bold text-gray-900 mb-1">免费版</h2>
+                        <p class="text-gray-500 text-sm mb-4">适合初次尝试的卖家</p>
+                        <div class="flex items-center justify-center">
+                            <span class="text-4xl font-bold">¥0</span>
+                            <span class="text-gray-500 ml-2">/永久</span>
+                        </div>
+                    </div>
+                    
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">每月10次AI优化</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">基础标题优化</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">基础描述生成</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-times text-red-500 mt-1 mr-2"></i>
+                            <span class="text-gray-500">多语言支持</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-times text-red-500 mt-1 mr-2"></i>
+                            <span class="text-gray-500">AI图片优化</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-times text-red-500 mt-1 mr-2"></i>
+                            <span class="text-gray-500">价格分析</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-times text-red-500 mt-1 mr-2"></i>
+                            <span class="text-gray-500">历史记录保存</span>
+                        </li>
+                    </ul>
+                    
+                    <button class="w-full py-3 bg-gray-100 text-gray-800 rounded-md hover:bg-gray-200 font-medium">
+                        当前方案
+                    </button>
+                </div>
+                
+                <div class="pricing-card popular bg-white rounded-xl shadow-lg p-6 border-2 border-blue-500 transform scale-105">
+                    <div class="absolute top-0 right-0 bg-blue-500 text-white px-3 py-1 text-xs font-semibold rounded-bl-lg rounded-tr-lg">
+                        最受欢迎
+                    </div>
+                    
+                    <div class="text-center mb-6">
+                        <h2 class="text-xl font-bold text-gray-900 mb-1">专业版</h2>
+                        <p class="text-gray-500 text-sm mb-4">适合活跃的跨境卖家</p>
+                        <div class="flex items-center justify-center">
+                            <span class="text-4xl font-bold">¥99</span>
+                            <span class="text-gray-500 ml-2">/月</span>
+                        </div>
+                    </div>
+                    
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">每月200次AI优化</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">高级标题优化</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">高级描述生成</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">多语言支持 (10种语言)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">基础AI图片优化</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">价格分析</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">90天历史记录</span>
+                        </li>
+                    </ul>
+                    
+                    <button class="w-full py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 font-medium">
+                        立即升级
+                    </button>
+                </div>
+                
+                <div class="pricing-card bg-white rounded-xl shadow-sm p-6 border-2 border-transparent">
+                    <div class="text-center mb-6">
+                        <h2 class="text-xl font-bold text-gray-900 mb-1">企业版</h2>
+                        <p class="text-gray-500 text-sm mb-4">适合专业跨境团队</p>
+                        <div class="flex items-center justify-center">
+                            <span class="text-4xl font-bold">¥299</span>
+                            <span class="text-gray-500 ml-2">/月</span>
+                        </div>
+                    </div>
+                    
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">无限次AI优化</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">专业标题优化</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">专业描述生成</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">多语言支持 (全部语言)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">高级AI图片优化</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">高级价格分析与建议</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">永久历史记录</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">多用户账号 (5个)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
+                            <span class="text-gray-700">优先客户支持</span>
+                        </li>
+                    </ul>
+                    
+                    <button class="w-full py-3 bg-black text-white rounded-md hover:bg-gray-800 font-medium">
+                        联系我们
+                    </button>
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-sm p-8 mb-12">
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">常见问题</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">如何计算AI优化次数？</h3>
+                        <p class="text-gray-700">每次提交产品信息进行优化算作一次AI优化。无论您选择优化标题、描述还是价格分析，都计为一次使用。</p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">是否支持退款？</h3>
+                        <p class="text-gray-700">我们提供7天无理由退款政策。如果您对服务不满意，可以在购买后7天内申请全额退款。</p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">如何升级或降级会员？</h3>
+                        <p class="text-gray-700">您可以随时在账户设置中更改您的会员计划。升级将立即生效，降级将在当前计费周期结束后生效。</p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">支持哪些支付方式？</h3>
+                        <p class="text-gray-700">我们支持微信支付、支付宝、Visa和Mastercard信用卡支付。企业用户可以申请开具发票。</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">还有其他问题？</h2>
+                <p class="text-gray-600 mb-6">我们的客服团队随时为您提供帮助</p>
+                <button class="px-6 py-3 bg-black text-white rounded-md hover:bg-gray-800 inline-flex items-center">
+                    <i class="fas fa-headset mr-2"></i> 联系客服
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 图片编辑页面 -->
+    <div id="image-editor" class="page pt-20 pb-12">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center mb-6">
+                <button onclick="showPage('tiktok-optimize')" class="mr-4 text-gray-600 hover:text-black">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+                <h1 class="text-2xl font-bold text-gray-900">AI图片编辑</h1>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+                        <div class="flex items-center justify-between mb-6">
+                            <h2 class="text-xl font-semibold text-gray-900">编辑图片</h2>
+                            <div>
+                                <button class="px-3 py-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 text-sm mr-2">
+                                    <i class="fas fa-undo mr-1"></i> 撤销
+                                </button>
+                                <button class="px-3 py-1 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 text-sm">
+                                    <i class="fas fa-redo mr-1"></i> 重做
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-center mb-6">
+                            <div class="relative">
+                                <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&h=800&q=80" 
+                                        alt="编辑图片" class="max-w-full rounded-lg shadow-sm">
+                                <div class="absolute bottom-4 right-4 bg-black bg-opacity-70 text-white px-3 py-1 rounded-full text-sm">
+                                    800 x 800
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-4 gap-4 mb-6">
+                            <div class="border-2 border-blue-500 rounded-md p-1">
+                                <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&h=150&q=80" 
+                                        alt="原图" class="w-full rounded-md">
+                                <p class="text-xs text-center mt-1">原图</p>
+                            </div>
+                            <div class="border border-gray-200 rounded-md p-1 hover:border-gray-400 cursor-pointer">
+                                <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&h=150&q=80&sat=-30" 
+                                        alt="风格1" class="w-full rounded-md">
+                                <p class="text-xs text-center mt-1">清新风格</p>
+                            </div>
+                            <div class="border border-gray-200 rounded-md p-1 hover:border-gray-400 cursor-pointer">
+                                <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&h=150&q=80&sat=30" 
+                                        alt="风格2" class="w-full rounded-md">
+                                <p class="text-xs text-center mt-1">鲜艳风格</p>
+                            </div>
+                            <div class="border border-gray-200 rounded-md p-1 hover:border-gray-400 cursor-pointer">
+                                <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&h=150&q=80&blur=1" 
+                                        alt="风格3" class="w-full rounded-md">
+                                <p class="text-xs text-center mt-1">柔焦风格</p>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    亮度
+                                </label>
+                                <input type="range" min="0" max="100" value="50" class="w-full">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    对比度
+                                </label>
+                                <input type="range" min="0" max="100" value="50" class="w-full">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    饱和度
+                                </label>
+                                <input type="range" min="0" max="100" value="50" class="w-full">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                    锐度
+                                </label>
+                                <input type="range" min="0" max="100" value="50" class="w-full">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl shadow-sm p-6">
+                        <h2 class="text-xl font-semibold text-gray-900 mb-4">AI增强</h2>
+                        
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+                            <button class="p-3 border border-gray-200 rounded-lg hover:bg-gray-50 flex flex-col items-center">
+                                <i class="fas fa-magic text-purple-600 text-xl mb-2"></i>
+                                <span class="text-sm text-gray-700">自动增强</span>
+                            </button>
+                            
+                            <button class="p-3 border border-gray-200 rounded-lg hover:bg-gray-50 flex flex-col items-center">
+                                <i class="fas fa-cut text-blue-600 text-xl mb-2"></i>
+                                <span class="text-sm text-gray-700">移除背景</span>
+                            </button>
+                            
+                            <button class="p-3 border border-gray-200 rounded-lg hover:bg-gray-50 flex flex-col items-center">
+                                <i class="fas fa-expand-alt text-green-600 text-xl mb-2"></i>
+                                <span class="text-sm text-gray-700">智能扩展</span>
+                            </button>
+                            
+                            <button class="p-3 border border-gray-200 rounded-lg hover:bg-gray-50 flex flex-col items-center">
+                                <i class="fas fa-eraser text-red-600 text-xl mb-2"></i>
+                                <span class="text-sm text-gray-700">去除瑕疵</span>
+                            </button>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                AI提示词
+                            </label>
+                            <textarea class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-black focus:border-black" 
+                                        rows="2" placeholder="描述您想要的图片效果，例如：增加产品光泽感，突出金属质感"></textarea>
+                        </div>
+                        
+                        <button class="w-full py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 flex items-center justify-center">
+                            <i class="fas fa-wand-magic-sparkles mr-2"></i> 应用AI增强
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-xl shadow-sm p-6 mb-6 sticky top-24">
+                        <h2 class="text-xl font-semibold text-gray-900 mb-4">导出选项</h2>
+                        
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                文件格式
+                            </label>
+                            <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-black focus:border-black">
+                                <option>JPG - 推荐用于照片</option>
+                                <option>PNG - 支持透明背景</option>
+                                <option>WEBP - 更小的文件大小</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                图片尺寸
+                            </label>
+                            <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-black focus:border-black">
+                                <option>原始尺寸 (800 x 800)</option>
+                                <option>TikTok Shop 推荐 (1000 x 1000)</option>
+                                <option>Amazon 推荐 (2000 x 2000)</option>
+                                <option>eBay 推荐 (1600 x 1600)</option>
+                                <option>自定义尺寸</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">
+                                图片质量
+                            </label>
+                            <select class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-black focus:border-black">
+                                <option>高质量 (推荐)</option>
+                                <option>中等质量</option>
+                                <option>低质量 (更小文件)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded text-black focus:ring-black h-4 w-4">
+                                <span class="ml-2 text-gray-700 text-sm">添加水印</span>
+                            </label>
+                        </div>
+                        
+                        <button class="w-full py-3 bg-black text-white rounded-md hover:bg-gray-800 flex items-center justify-center mb-3">
+                            <i class="fas fa-download mr-2"></i> 下载图片
+                        </button>
+                        
+                        <button class="w-full py-3 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 flex items-center justify-center">
+                            <i class="fas fa-save mr-2"></i> 保存到产品
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 页面切换功能
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+        }
+        
+        // 初始显示登录页面
+        document.addEventListener('DOMContentLoaded', function() {
+            showPage('login');
+            
+            // 初始化图表
+            const ctx = document.getElementById('usageChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['1日', '5日', '10日', '15日', '20日', '25日', '30日'],
+                    datasets: [{
+                        label: '标题优化',
+                        data: [5, 8, 12, 15, 20, 25, 30],
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }, {
+                        label: '图片优化',
+                        data: [2, 4, 6, 8, 10, 15, 18],
+                        borderColor: 'rgba(139, 92, 246, 1)',
+                        backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }, {
+                        label: '价格分析',
+                        data: [1, 2, 3, 5, 7, 9, 12], 
+                        borderColor: 'rgba(16, 185, 129, 1)',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>                                       
