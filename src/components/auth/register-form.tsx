@@ -26,16 +26,24 @@ export default function RegisterForm() {
       return;
     }
     
+    // 密码强度验证
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      setFormError('密码必须至少包含8个字符，至少一个大写字母，一个小写字母和一个数字');
+      return;
+    }
+    
     if (!agreedTerms) {
       setFormError('请同意服务条款');
       return;
     }
     
-    // 提交注册
-    await register(email, password);
-    
-    // 注册后需要更新用户的全名，这部分通常需要在注册后调用另一个API来更新用户信息
-    // 这里简化处理，实际实现可能需要在auth-context.tsx中扩展register方法
+    try {
+      // 提交注册
+      await register(email, password, { full_name: fullName });
+    } catch (error: any) {
+      setFormError(error.message || '注册失败，请稍后再试');
+    }
   };
 
   return (

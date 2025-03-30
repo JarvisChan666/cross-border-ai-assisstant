@@ -2,22 +2,30 @@
 
 import { useAuth } from './auth-context';
 import { useRouter, usePathname } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
+  const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
+    setIsClient(true);
+    
     // 如果用户未登录且页面已加载完成，重定向到登录页
-    if (!loading && !user && pathname !== '/auth/login' && pathname !== '/auth/register' && pathname !== '/auth/forgot-password') {
+    if (!loading && !user && 
+        pathname !== '/auth/login' && 
+        pathname !== '/auth/register' && 
+        pathname !== '/auth/verify-email' && 
+        pathname !== '/auth/forgot-password' &&
+        pathname !== '/auth/callback') {
       router.push('/auth/login');
     }
   }, [user, loading, router, pathname]);
 
-  // 在加载状态显示加载指示器
-  if (loading) {
+  // 在客户端渲染之前或加载状态时显示加载指示器
+  if (!isClient || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="flex flex-col items-center">
